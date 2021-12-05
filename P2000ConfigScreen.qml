@@ -190,17 +190,18 @@ Screen {
 				topMargin: isNxt ? 10:8
 				horizontalCenter: parent.horizontalCenter
 			}
-			Rectangle {height: bh ;width:bw ; Text {text:"Q"} MouseArea {anchors.fill: parent; onClicked: { newString("Q")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"W"} MouseArea {anchors.fill: parent; onClicked: { newString("W")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"E"} MouseArea {anchors.fill: parent; onClicked: { newString("E")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"R"} MouseArea {anchors.fill: parent; onClicked: { newString("R")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"T"} MouseArea {anchors.fill: parent; onClicked: { newString("T")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"Y"} MouseArea {anchors.fill: parent; onClicked: { newString("Y")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"U"} MouseArea {anchors.fill: parent; onClicked: { newString("U")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"I"} MouseArea {anchors.fill: parent; onClicked: { newString("I")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"O"} MouseArea {anchors.fill: parent; onClicked: { newString("O")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"P"} MouseArea {anchors.fill: parent; onClicked: { newString("P")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"BACK"} MouseArea {anchors.fill: parent; onClicked: {searchstring = searchstring.substring(0,searchstring.length-1) ; updateList(searchstring)}}}
+
+			Rectangle {height: bh ;width:bw ; Text {text:"Q";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("Q")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"W";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("W")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"E";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("E")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"R";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("R")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"T";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("T")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"Y";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("Y")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"U";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("U")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"I";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("I")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"O";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("O")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"P";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("P")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"BACK";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: {searchstring = searchstring.substring(0,searchstring.length-1) ; updateList(searchstring)}}}
 		}
 
 
@@ -212,15 +213,15 @@ Screen {
 				topMargin: isNxt ? 10:8
 				horizontalCenter: parent.horizontalCenter
 			}
-			Rectangle {height: bh ;width:bw ; Text {text:"A"} MouseArea {anchors.fill: parent; onClicked: { newString("A")}}}
-			Rectangle { height: bh ;width:bw ; Text {text:"S"} MouseArea {anchors.fill: parent; onClicked: { newString("S")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"D"} MouseArea {anchors.fill: parent; onClicked: { newString("D")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"F"} MouseArea {anchors.fill: parent; onClicked: { newString("F")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"G"} MouseArea {anchors.fill: parent; onClicked: { newString("G")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"H"} MouseArea {anchors.fill: parent; onClicked: { newString("H")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"J"} MouseArea {anchors.fill: parent; onClicked: { newString("J")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"K"} MouseArea {anchors.fill: parent; onClicked: { newString("K")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"L"} MouseArea {anchors.fill: parent; onClicked: { newString("L")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"A";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("A")}}}
+			Rectangle { height: bh ;width:bw ; Text {text:"S";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("S")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"D";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("D")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"F";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("F")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"G";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("G")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"H";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("H")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"J";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("J")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"K";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("K")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"L";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("L")}}}
 		}
 
 
@@ -232,13 +233,13 @@ Screen {
 				topMargin: isNxt ? 10:8
 				horizontalCenter: parent.horizontalCenter
 			}
-			Rectangle {height: bh ;width:bw ; Text {text:"Z"} MouseArea {anchors.fill: parent; onClicked: { newString("Z")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"X"} MouseArea {anchors.fill: parent; onClicked: { newString("X")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"C"} MouseArea {anchors.fill: parent; onClicked: { newString("C")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"V"} MouseArea {anchors.fill: parent; onClicked: { newString("V")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"B"} MouseArea {anchors.fill: parent; onClicked: { newString("B")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"N"} MouseArea {anchors.fill: parent; onClicked: { newString("N")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"M"} MouseArea {anchors.fill: parent; onClicked: { newString("M")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"Z";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("Z")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"X";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("X")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"C";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("C")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"V";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("V")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"B";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("B")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"N";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("N")}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"M";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("M")}}}
 		}
 
 		Row {
@@ -249,8 +250,8 @@ Screen {
 				topMargin: isNxt ? 10:8
 				horizontalCenter: parent.horizontalCenter
 			}
-			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"SPACE  "} MouseArea {anchors.fill: parent; onClicked: { newString(" ")}}}
-			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"DASH"} MouseArea {anchors.fill: parent; onClicked: { newString("-")}}}
+			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"SPACE";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString(" ")}}}
+			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"DASH";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("-")}}}
 		}
 	}
 	
