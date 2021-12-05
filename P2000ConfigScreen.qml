@@ -9,8 +9,8 @@ Screen {
 	
 	property var placenames : []
 	property var foundPlaces : []
-    property int bw : 70
-    property int bh : 35
+    property int bw : isNxt? 70:56
+    property int bh : isNxt? 35:28
     property string searchstring : ""
 	
 
@@ -59,8 +59,7 @@ Screen {
 	Rectangle{
         id: listviewContainer1
         width: isNxt ? 300 : 240
-        //height: parent.height - keyb.height - keyb.bottomMargin -100
-		height: 200
+		height: isNxt? 200:160
         color: "white"
         radius: isNxt ? 5 : 4
         border.color: "black"
@@ -176,8 +175,8 @@ Screen {
 
 	Rectangle {
 		id:keyb
-		height: 200
-		width:parent.width -50
+		height: isNxt? 200:160
+		width: isNxt? parent.width -50:parent.width -40
 		anchors {
 			bottom: parent.bottom
 			bottomMargin: isNxt ? 20:16
@@ -250,8 +249,8 @@ Screen {
 				topMargin: isNxt ? 10:8
 				horizontalCenter: parent.horizontalCenter
 			}
-			Rectangle {height: bh ;width:200 ; Text {text:"SPACE  "} MouseArea {anchors.fill: parent; onClicked: { newString(" ")}}}
-			Rectangle {height: bh ;width:200 ; Text {text:"DASH"} MouseArea {anchors.fill: parent; onClicked: { newString("-")}}}
+			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"SPACE  "} MouseArea {anchors.fill: parent; onClicked: { newString(" ")}}}
+			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"DASH"} MouseArea {anchors.fill: parent; onClicked: { newString("-")}}}
 		}
 	}
 	
@@ -288,7 +287,7 @@ Screen {
 		anchors {
 			top: mytext1.top
 			left: mytext1.right
-			leftMargin:20
+			leftMargin:isNxt? 20:16
 		}
 	}
 
@@ -300,7 +299,7 @@ Screen {
 		anchors {
 			top: mytext1.bottom
 			left: mytext1.left
-			topMargin:20
+			topMargin:isNxt? 20:16
 		}
 	}
 
@@ -312,7 +311,7 @@ Screen {
 		anchors {
 			top: mytext2.top
 			left: woonplaats.left
-			leftMargin:20
+			leftMargin:isNxt? 20:16
 		}
 	}
 
@@ -371,9 +370,6 @@ Screen {
 		}
 		http.send();
     }
-	
-
-	
 }
 
 

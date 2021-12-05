@@ -9,7 +9,7 @@ import FileIO 1.0
 
 App {
 	id: bitcoinApp
-	property bool 		debugOutput : true
+	property bool 		debugOutput : false
 	property url 		tileUrl : "P2000Tile.qml"
 
 	property url 		thumbnailIcon: "qrc:/tsc/BitcoinIcon.png"
