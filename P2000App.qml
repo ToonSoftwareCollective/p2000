@@ -1,5 +1,5 @@
-//11-2020
-//by oepi-loepi and ToonzDev
+//12-2021
+//by oepi-loepi
 
 
 import QtQuick 2.1
@@ -8,11 +8,11 @@ import qb.base 1.0;
 import FileIO 1.0
 
 App {
-	id: bitcoinApp
-	property bool 		debugOutput : true
+	id: p2000App
+	property bool 		debugOutput : false
 	property url 		tileUrl : "P2000Tile.qml"
 
-	property url 		thumbnailIcon: "qrc:/tsc/BitcoinIcon.png"
+	property url 		thumbnailIcon: "qrc:/tsc/bad_small.png"
 	property 		 	P2000Tile p2000Tile
 
 	property			P2000Screen  p2000Screen
