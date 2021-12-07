@@ -9,6 +9,7 @@ Screen {
 	
 	property var placenames : []
 	property var foundPlaces : []
+	
     property int bw : isNxt? 70:56
     property int bh : isNxt? 35:28
     property string searchstring : ""
@@ -17,8 +18,9 @@ Screen {
 	onShown: {
 		addCustomTopRightButton("Opslaan")
 		woonplaats.text =tempWoonplaats
+		woonplaatsToon1.inputText =tempWoonplaats
 		searchstring = ""
-		getPlaces()
+		if (isNxt){getPlaces()}
 	}
 
 	onCustomButtonClicked: {
@@ -27,31 +29,33 @@ Screen {
 		hide()
 	}
 
-	function saveWoonplaats(text) {
-		if (text) {
-			tempWoonplaats = text;
-			woonplaats2.text = tempWoonplaats;
+	function saveWoonplaats(plaats) {
+		if (plaats) {
+			tempWoonplaats = plaats;
+			if (isNxt){woonplaats2.text = tempWoonplaats}
+			if (!isNxt){woonplaatsToon1.inputText =tempWoonplaats}
 		}
 	}
 
-    function updateList(searchPlace){
-	    placesModel.clear()
-        console.log(searchPlace)
+
+	function updateList(searchPlace){
+        if (app.debugOutput) console.log("*********P2000: " + searchPlace)
 		foundPlaces.splice(0, foundPlaces.length);
-        if ((placesModel)) {
+
+        if (placesModel){
 			placesModel.clear()
-			for (var i in placenames) {
-				if(searchPlace === ""){
+			if(searchPlace === ""){
+				for (var i in placenames) {
 					placesModel.append({place: placenames[i]});
 					foundPlaces.push(placenames[i]);
-				}else{
-					console.log(placenames[i].toLowerCase().substring(0,searchPlace.length))
-					if(placenames[i].toLowerCase().substring(0,searchPlace.length) === searchPlace.toLowerCase() ){
-						placesModel.append({place: placenames[i]});
-						foundPlaces.push(placenames[i]);
+				}
+			}else{
+				for (var i in placenames) {
+					if(placenames[i].toLowerCase().substring(0,searchPlace.length) === searchPlace.toLowerCase()){
+							placesModel.append({place: placenames[i]});
+							foundPlaces.push(placenames[i]);
 					}
 				}
-
 			}
 		}
     }
@@ -106,6 +110,8 @@ Screen {
             }
             focus: true
         }
+		
+		visible: isNxt
     }
 	
 	IconButton {
@@ -121,7 +127,8 @@ Screen {
 			if (listview1.currentIndex>0){
 				listview1.currentIndex  = listview1.currentIndex -1
 			}
-		}	
+		}
+	visible: isNxt		
 	}
 	
 	IconButton {
@@ -136,6 +143,7 @@ Screen {
 			searchstring = ""
 			getPlaces()
 		}	
+		visible: isNxt
 	}
 
 
@@ -150,7 +158,8 @@ Screen {
 		iconSource: "qrc:/tsc/down.png"
 		onClicked: {
 			listview1.currentIndex  = listview1.currentIndex +1
-		}	
+		}
+		visible: isNxt
 	}
 
 	NewTextLabel {
@@ -169,8 +178,8 @@ Screen {
 			}
 		onClicked: {
 			saveWoonplaats(foundPlaces[listview1.currentIndex])
-			console.log(foundPlaces[listview1.currentIndex])
 		}
+		visible: isNxt
 	}
 
 	Rectangle {
@@ -201,7 +210,7 @@ Screen {
 			Rectangle {height: bh ;width:bw ; Text {text:"I";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("I")}}}
 			Rectangle {height: bh ;width:bw ; Text {text:"O";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("O")}}}
 			Rectangle {height: bh ;width:bw ; Text {text:"P";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("P")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"BACK";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: {searchstring = searchstring.substring(0,searchstring.length-1) ; updateList(searchstring)}}}
+			Rectangle {height: bh ;width:bw ; Text {text:"WIS";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("BACK")}}}
 		}
 
 
@@ -250,9 +259,10 @@ Screen {
 				topMargin: isNxt ? 10:8
 				horizontalCenter: parent.horizontalCenter
 			}
-			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"SPACE";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString(" ")}}}
-			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"DASH";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("-")}}}
+			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"SPATIE";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString(" ")}}}
+			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"STREEPJE";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("-")}}}
 		}
+		visible: isNxt
 	}
 	
 	Text {
@@ -266,6 +276,7 @@ Screen {
             horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
         }
+		visible: isNxt
     }
 		
 	Text {
@@ -278,6 +289,7 @@ Screen {
 			horizontalCenter: parent.horizontalCenter
 			topMargin:20
 		}
+		visible: isNxt
 	}
 
 	Text {
@@ -290,6 +302,7 @@ Screen {
 			left: mytext1.right
 			leftMargin:isNxt? 20:16
 		}
+		visible: isNxt
 	}
 
 	Text {
@@ -302,6 +315,7 @@ Screen {
 			left: mytext1.left
 			topMargin:isNxt? 20:16
 		}
+		visible: isNxt
 	}
 
 	Text {
@@ -314,7 +328,9 @@ Screen {
 			left: woonplaats.left
 			leftMargin:isNxt? 20:16
 		}
+		visible: isNxt
 	}
+	
 
     function  replaceString(inputstring, pattern, nw) {
        var curidx = 0 ;
@@ -322,7 +338,7 @@ Screen {
        var res = "";
        while(curidx !== -1) {
            curidx = inputstring.indexOf(pattern, curidx);
-           //console.log(curidx);
+           if (app.debugOutput) console.log("*********P2000: " + curidx);
            if(curidx === -1) {
                break;
            }
@@ -335,14 +351,17 @@ Screen {
     }
 	
 	function  newString(newChar) {
-        searchstring = searchstring + newChar
+		if (newChar === "BACK"){
+			searchstring = searchstring.substring(0,searchstring.length-1)
+		}else{
+			searchstring = searchstring + newChar
+		}
         updateList(searchstring)
     }
 	
     function getPlaces(){
-        placesModel.clear()
 		placenames.splice(0, placenames.length);
-        if (app.debugOutput) console.log("*********P2000: " + "Start getPlaces")
+        if (app.debugOutput) console.log("*********P2000: Start getPlaces")
         var http = new XMLHttpRequest()
 		http.open("GET", "https://alarmeringen.nl/plaatsen.html", true);
 		http.onreadystatechange = function() { // Call a function when the state changes.
@@ -365,12 +384,60 @@ Screen {
 					}
 					updateList("")
 				} else {
-					console.log(http.status)
+					if (app.debugOutput) console.log("*********P2000: " + http.status)
 				}
 			}
 		}
 		http.send();
     }
+	
+	
+	Text {
+		id: mytextToon1
+		text:  "Instellingen"
+		font.family: qfont.semiBold.name
+		font.pixelSize: isNxt ? 18:14
+		anchors {
+			top: parent.top
+			left: parent.left
+			leftMargin: 20
+			topMargin:20
+		}
+		visible: !isNxt
+	}
+	
+	Text {
+		id: mytextToon2
+		text:  " kijk op https://alarmeringen.nl/plaatsen.html voor de juiste spelling van de plaatsnaam."
+		font.family: qfont.semiBold.name
+		font.pixelSize: isNxt ? 18:14
+		anchors {
+			left:mytextToon1.left
+			top: mytextToon1.bottom
+			topMargin: 6
+		}
+		visible: !isNxt
+	}
+	
+	EditTextLabel4421 { 
+		id: woonplaatsToon1
+		width: (parent.width*0.4) - 40		
+		height: 30		
+		leftTextAvailableWidth: 100
+		leftText: "Plaats: "
+		labelFontSize: isNxt ? 18:14
+		labelFontFamily: qfont.semiBold.name
+		anchors {
+			left:mytextToon1.left
+			top: mytextToon2.bottom
+			topMargin: 6
+		}
+		onClicked: {
+			qkeyboard.open( woonplaatsToon1.leftText,  woonplaatsToon1.inputText, saveWoonplaats)
+		}
+		visible: !isNxt
+	}
+
 }
 
 

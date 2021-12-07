@@ -56,7 +56,7 @@ Screen {
 
 	Text{
 		id: waitText
-		text: "Wacht op data" 
+		text: "Wacht op meldingen"
 		font.pixelSize: isNxt? 25:20
 		font.family:  qfont.bold.name
 		anchors {
