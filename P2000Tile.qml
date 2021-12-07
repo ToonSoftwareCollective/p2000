@@ -5,7 +5,7 @@ import qb.components 1.0
 
 Tile {
 	id: p2000Tile
-	
+	property bool waiting:true
 	property bool dimState: screenStateController.dimmedColors
 	onClicked: {
 		stage.openFullscreen(app.p2000ScreenUrl)
@@ -13,42 +13,41 @@ Tile {
 
 	Component.onCompleted: {
 		app.p2000Updated.connect(updateP2000List);
+		updateP2000List();
 	}
 	
-	
-	function updateP2000List() {
-		if ((statusModel)) {
-			statusModel.clear()
-			timeModel.clear()
-			for (var i in app.description) {
-				var shortDescription = app.description[i].substring(0, 37);
-				statusModel.append({status: shortDescription, txtcolor: app.txtcolors[i]});
-				timeModel.append({time: app.pubDate[i], txtcolor: app.txtcolors[i]});
-			}
-		}
-	}
-	
-	
-	ListModel {
-        id: timeModel
+		
+    function updateP2000List() {
+        if (app.description.length>0){waiting=false}else{waiting=true}
+        if (app.description[0]){
+		    var shortDescription0 = app.description[0].substring(0, 55);
+            eventText0.text= shortDescription0
+            timeText0.text = app.pubDate[0]   
+        }
+        if (app.description[1]){
+		    var shortDescription1 = app.description[1].substring(0, 55);
+            eventText1.text= shortDescription1
+            timeText1.text=app.pubDate[1]
+        }
+        if (app.description[2]){
+		    var shortDescription2 = app.description[2].substring(0, 55);
+            eventText2.text= shortDescription2
+            timeText2.text=app.pubDate[2]
+        }
     }
 
-    ListModel {
-        id: statusModel
-    }
-	
-	Text{
-		id: waitText
-		text: "Wacht op data" 
-		font.pixelSize: isNxt? 25:20
-		font.family:  qfont.bold.name
-		anchors {
-            	verticalCenter: parent.verticalCenter
-				horizontalCenter: parent.horizontalCenter
+    Text{
+        id: waitText
+        text: "Wacht op meldingen"
+        font.pixelSize: isNxt? 25:20
+        font.family:  qfont.bold.name
+        anchors {
+                verticalCenter: parent.verticalCenter
+                horizontalCenter: parent.horizontalCenter
         }
-		color: dimState? "white" : "grey" 
-		visible: (statusModel.count==0 && app.woonplaats != "xxxxxxxxxxx")? true: false
-	}
+        color: dimState? "white" : "grey"
+        visible: (waiting & app.woonplaats != "xxxxxxxxxxx")? true: false
+    }
 	
 	Text{
 		id: setupText
@@ -70,7 +69,7 @@ Tile {
 		font.family:  qfont.bold.name
 		anchors {
 			bottom: setupText.top
-			bottomMargin: isNxt? 20:16
+			bottomMargin: isNxt? 16:12
 			horizontalCenter: parent.horizontalCenter
         }
 		color: dimState? "white" : "grey" 
@@ -88,61 +87,30 @@ Tile {
             leftMargin:  isNxt? 12:9
             topMargin: isNxt? 6:5
         }
-		color: dimState? "white" : "grey" 
+		color : dimState?  dimmableColors.clockTileColor : colors.clockTileColor
 		visible: (!setupText.visible && !waitText.visible)
 	}
 	
 
-    GridView {
-         id: timeListView
-         model: timeModel
-         delegate: Text {
-             id: mytext1
-             text: time
-             color: dimState? "white" : txtcolor
-             font {
-                 pixelSize: isNxt? 12:9
-             }
-             anchors.left: parent.left
-         }
-         flow: GridView.BottomToTop
-         cellWidth: isNxt? parent.width-20 : parent.width-16
-         cellHeight:  isNxt? 16:12
-         height : isNxt? parent.height  - 20: parent.height  - 16
-         width :   isNxt? 40:32
-         anchors {
-             top: wpText.bottom
-             left: parent.left
-             leftMargin:  isNxt? 12:9
-             topMargin: isNxt? 6:5
-         }
-         visible: true
-     }
-
-
-     GridView {
-         id: statusListView
-         model: statusModel
-         delegate: Text {
-             id: mytext2
-             text: status
-             color: dimState? "white" : "grey"
-             font {
-                 pixelSize: isNxt? 12:9
-             }
-             anchors.left: parent.left
-         }
-         flow: GridView.BottomToTop
-         cellWidth: isNxt? parent.width-20 : parent.width-16
-         cellHeight: isNxt? 16:12
-         height :isNxt? parent.height  - 20: parent.height  - 16
-         width : isNxt? 40:32
-         anchors {
-             top: timeListView.top
-             left: timeListView.right
-             leftMargin:  isNxt? 6:5
-         }
-         visible: true
-     }
+    Grid {
+		id: gridContainer1
+		columns: 2
+		spacing: isNxt? 7:5
+		rowSpacing: 2
+		height : isNxt? parent.height  - 100: parent.height  - 16
+		width :   parent.width
+		anchors {
+			top: wpText.bottom
+			left: parent.left
+			leftMargin:  isNxt? 12:9
+			topMargin: isNxt? 6:5
+		}
+		Text {id: timeText0;width:40; font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name; color: dimState?  "white" : app.txtcolors[0]}
+		Text {id: eventText0;wrapMode: Text.WordWrap;width:parent.width - 57;font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name;color: dimState?  "white" : "black"}
+		Text {id: timeText1;width:40;font.pixelSize: isNxt? 16:12;font.family:  qfont.regular.name; color: dimState?  "white" :  app.txtcolors[1]}
+		Text {id: eventText1; wrapMode: Text.WordWrap;width:parent.width - 57;font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name;color: dimState?  "white" : "black"}
+		Text {id: timeText2;width:40; font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name; color: dimState?  "white" :  app.txtcolors[2]}
+		Text {id: eventText2; wrapMode: Text.WordWrap;width:parent.width - 57;font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name;color: dimState?  "white" : "black"}
+ }
 }
 	

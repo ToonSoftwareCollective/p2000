@@ -9,7 +9,7 @@ import FileIO 1.0
 
 App {
 	id: p2000App
-	property bool 		debugOutput : false
+	property bool 		debugOutput : true
 	property url 		tileUrl : "P2000Tile.qml"
 
 	property url 		thumbnailIcon: "qrc:/tsc/bad_small.png"
@@ -116,9 +116,9 @@ App {
 								if (debugOutput) console.log("*********P2000: " + tempTitle);
 								if (debugOutput) console.log("*********P2000: " + tempdescription);
 								
-								if(tempTitle.toLowerCase().indexOf("ambu")>-1 || tempdescription.toLowerCase().indexOf("ambu")>-1){lineColor = "yellow";}
+								if(tempTitle.toLowerCase().indexOf("ambu")>-1 || tempdescription.toLowerCase().indexOf("ambu")>-1){lineColor = "black";}
 								if(tempTitle.toLowerCase().indexOf("politie")>-1 || tempdescription.toLowerCase().indexOf("politie")>-1){lineColor = "blue";}
-								if(tempTitle.toLowerCase().indexOf(" br ")>-1 || tempdescription.toLowerCase().indexOf(" br ")>-1){lineColor = "red";}
+								if(tempTitle.toLowerCase().indexOf("brandw")>-1 || tempdescription.toLowerCase().indexOf("brandw")>-1){lineColor = "red";}
 								
 								tempdescription = replaceString(tempdescription, "Ambulance ", "Ambu ");
 								tempdescription = replaceString(tempdescription, "Brandweer ", "Brw ");
@@ -137,7 +137,7 @@ App {
 								//let year = d.getFullYear().toString();;
 								let month = d.getMonth()+1;
 								let monthString = month.toString();
-								let day = d.getDay();
+								let day = d.getDate();
 								let hour = d.getHours().toString();;
 								if (hour.length<2){hour = "0" + hour}
 								let minutes = d.getMinutes().toString();
