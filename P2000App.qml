@@ -9,7 +9,7 @@ import FileIO 1.0
 
 App {
 	id: p2000App
-	property bool 		debugOutput : true
+	property bool 		debugOutput : false
 	property url 		tileUrl : "P2000Tile.qml"
 
 	property url 		thumbnailIcon: "qrc:/tsc/bad_small.png"
@@ -92,7 +92,7 @@ App {
 
     function getP2000Data(){
 		scrapetime2 = scrapetime;
-        console.log("Start P2000 step1")
+        if (debugOutput) console.log("*********P2000: " + "Start P2000 step1")
         var http = new XMLHttpRequest()
 		http.open("GET", url, true);
 		http.onreadystatechange = function() { // Call a function when the state changes.
@@ -160,7 +160,7 @@ App {
 						 }
 					}
 				} else {
-					console.log(http.status)
+					if (debugOutput) console.log("*********P2000: " + http.status)
 				}
 
 			}
