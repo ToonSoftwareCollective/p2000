@@ -28,6 +28,7 @@ App {
 	property var 		txtcolors : [];	
 	property int		scrapetime: 20000;
 	property int		scrapetime2: 20000;
+	property bool 		firststime: true;
 	
 	property variant p2000SettingsJson : {
 		'woonplaats': ""
@@ -65,7 +66,8 @@ App {
 		pubDate.splice(0, pubDate.length);
 		pubDateFull.splice(0, pubDateFull.length);
 		txtcolors.splice(0, txtcolors.length);
-		p2000Updated();
+		firststime = true;
+		//p2000Updated();
 		getP2000Data()
 	}
 
@@ -77,7 +79,6 @@ App {
 	   var res = "";
 	   while(curidx != -1) {
 		   curidx = inputstring.indexOf(pattern, curidx);
-		   //console.log(curidx);
 		   if(curidx == -1) {
 			   break;
 		   }
@@ -98,7 +99,7 @@ App {
 		http.onreadystatechange = function() { // Call a function when the state changes.
 			if (http.readyState === 4) {
 				if (http.status === 200) {
-				if (debugOutput) console.log("*********P2000: " + http.responseText.toString());
+					if (debugOutput) console.log("*********P2000: " + http.responseText.toString());
 					var items = http.responseText.toString().split("<item>")
 					var searchString = woonplaats.toLowerCase();
 					for(var x = 1;x < items.length;x++){
@@ -134,11 +135,11 @@ App {
 								description.unshift(tempdescription);
 								
 								const d = new Date(tempPubDate);
-								//let year = d.getFullYear().toString();;
+								//let year = d.getFullYear().toString();
 								let month = d.getMonth()+1;
 								let monthString = month.toString();
 								let day = d.getDate();
-								let hour = d.getHours().toString();;
+								let hour = d.getHours().toString();
 								if (hour.length<2){hour = "0" + hour}
 								let minutes = d.getMinutes().toString();
 								if (debugOutput) console.log("*********P2000: " + minutes.length);
@@ -147,18 +148,31 @@ App {
 								pubDate.unshift(hour + ":" + minutes);
 								
 								if (debugOutput) console.log("*********P2000: " + hour + ":" + minutes);
-								
+
 								if (title.length>10){
 									title.pop();
 									description.pop();
 									pubDate.pop();
 									pubDateFull.pop();
 									txtcolors.pop();
-								}
+								} 
 							}
-							p2000Updated();
+							
 						 }
 					}
+					if (debugOutput) console.log("*********P2000: " + title);
+					
+					if (firststime){ //reverse the array if it is the first time
+						if (debugOutput) console.log("*********P2000: " + "firsttime");
+						title.reverse();
+						if (debugOutput) console.log("*********P2000: " + title);
+						description.reverse();
+						pubDate.reverse();
+						pubDateFull.reverse();
+						txtcolors.reverse();
+						firststime = false;
+					}
+					p2000Updated();
 				} else {
 					if (debugOutput) console.log("*********P2000: " + http.status)
 				}

@@ -24,6 +24,7 @@ Screen {
 	}
 
 	onCustomButtonClicked: {
+		if (tempWoonplaats === "")tempWoonplaats ="xxxxxxxxxxx"
 		app.woonplaats = tempWoonplaats
 		app.saveSettings()
 		hide()
@@ -36,7 +37,6 @@ Screen {
 			if (!isNxt){woonplaatsToon1.inputText =tempWoonplaats}
 		}
 	}
-
 
 	function updateList(searchPlace){
         if (app.debugOutput) console.log("*********P2000: " + searchPlace)
