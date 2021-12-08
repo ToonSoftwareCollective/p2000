@@ -1,3 +1,6 @@
+1.0.3
+- different approaches for Toon 1 and Toon 2
+
 1.0.2
 - reverse array when loaded first time
 

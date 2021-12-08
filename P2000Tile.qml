@@ -22,18 +22,20 @@ Tile {
         if (app.description[0]){
 		    var shortDescription0 = app.description[0].substring(0, 55);
             eventText0.text= shortDescription0
-            timeText0.text = app.pubDate[0]   
+            timeText0.text = app.pubDate[0]
         }
         if (app.description[1]){
 		    var shortDescription1 = app.description[1].substring(0, 55);
             eventText1.text= shortDescription1
-            timeText1.text=app.pubDate[1]
+            timeText1.text=  app.pubDate[1]
         }
         if (app.description[2]){
 		    var shortDescription2 = app.description[2].substring(0, 55);
             eventText2.text= shortDescription2
-            timeText2.text=app.pubDate[2]
+            timeText2.text=  app.pubDate[2]
         }
+		
+		
     }
 
     Text{
@@ -105,11 +107,11 @@ Tile {
 			leftMargin:  isNxt? 12:9
 			topMargin: isNxt? 6:5
 		}
-		Text {id: timeText0;width:40; font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name; color: dimState?  "white" : app.txtcolors[0]}
+		Text {id: timeText0;width:40; font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name; color: dimState?  "white" : "black"}
 		Text {id: eventText0;wrapMode: Text.WordWrap;width:parent.width - 57;font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name;color: dimState?  "white" : "black"}
-		Text {id: timeText1;width:40;font.pixelSize: isNxt? 16:12;font.family:  qfont.regular.name; color: dimState?  "white" :  app.txtcolors[1]}
+		Text {id: timeText1;width: 40;font.pixelSize: isNxt? 16:12;font.family:  qfont.regular.name; color: dimState?  "white" : "black"}
 		Text {id: eventText1; wrapMode: Text.WordWrap;width:parent.width - 57;font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name;color: dimState?  "white" : "black"}
-		Text {id: timeText2;width:40; font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name; color: dimState?  "white" :  app.txtcolors[2]}
+		Text {id: timeText2;width:40; font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name; color: dimState?  "white" : "black"}
 		Text {id: eventText2; wrapMode: Text.WordWrap;width:parent.width - 57;font.pixelSize: isNxt? 16:12;font.family: qfont.regular.name;color: dimState?  "white" : "black"}
  }
 }
