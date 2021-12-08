@@ -1,6 +1,8 @@
+1.0.2
+- reverse array when loaded first time
+
 1.0.1
 - minor changes
-
 
 1.0.0
 - initial release
