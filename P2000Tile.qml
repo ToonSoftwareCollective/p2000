@@ -80,7 +80,9 @@ Tile {
 
 	Text{
 		id: wpText
-		text: "P2000 - " + app.woonplaats 
+		text: "P2000 - " + app.woonplaats
+		wrapMode: Text.WordWrap
+		width : isNxt? parent.width - 24 : parent.width - 18
 		font.pixelSize: isNxt? 16:12
 		font.family:  qfont.bold.name
 		anchors {
