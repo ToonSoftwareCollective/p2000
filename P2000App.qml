@@ -9,7 +9,7 @@ import FileIO 1.0
 
 App {
 	id: p2000App
-	property bool 		debugOutput : true
+	property bool 		debugOutput : false
 	property url 		tileUrl : "P2000Tile.qml"
 
 	property url 		thumbnailIcon: "qrc:/tsc/bad_small.png"
@@ -26,8 +26,8 @@ App {
 	property var 		pubDate : [];
 	property var 		pubDateFull : [];
 	property var 		txtcolors : [];	
-	property int		scrapetime: 20000;
-	property int		scrapetime2: 20000;
+	property int		scrapetime: 60000; //every minute after first fetch
+	property int		scrapetime2: 20000;  //first fetch after start
 	property bool 		firststime: true;
 	
 	property variant p2000SettingsJson : {
