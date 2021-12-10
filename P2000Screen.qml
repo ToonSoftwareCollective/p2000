@@ -5,6 +5,7 @@ import qb.components 1.0
 Screen {
 	id: p2000Screen
 	screenTitle: "P2000 App"
+	property bool waiting:true
 
 	onShown: {    
 		addCustomTopRightButton("Instellingen")
@@ -19,6 +20,7 @@ Screen {
 	}
 	
 	function updateP2000List() {
+		if (app.description.length>0){waiting=false}else{waiting=true}
 		if ((statusModel)) {
 			statusModel.clear()
 			timeModel.clear()
@@ -64,7 +66,7 @@ Screen {
 				horizontalCenter: parent.horizontalCenter
         }
 		color: dimState? "white" : "grey" 
-		visible: (statusModel.count==0 && app.woonplaats != "xxxxxxxxxxx")? true: false
+		visible: (waiting & app.woonplaats != "xxxxxxxxxxx")? true: false
 	}
 	
 	Text{
@@ -105,7 +107,7 @@ Screen {
             leftMargin:  isNxt? 50:40
             topMargin: isNxt? 20:16
         }
-        visible: true
+        visible: (!setupText.visible && !waitText.visible)
     }
 
 
@@ -132,7 +134,7 @@ Screen {
             left: timeListView.right
             leftMargin:  isNxt? 25:20
         }
-        visible: true
+       visible: (!setupText.visible && !waitText.visible)
     }	
 	
 }
