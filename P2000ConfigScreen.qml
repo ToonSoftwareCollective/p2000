@@ -8,96 +8,118 @@ Screen {
 	property string tempWoonplaats: app.woonplaats
 	
 	property var placenames : []
-	property var foundPlaces : []
-	
-	property var regionames : []
-	property var foundRegio : []
-	
-	property var provincienames : []
-	property var foundProvincie : []
-	
+	property var cityURLs : []
+
     property int bw : isNxt? 70:56
     property int bh : isNxt? 35:28
-    property string searchstring : ""
 	property string tempUrl : ""
 	
 
 	onShown: {
 		addCustomTopRightButton("Opslaan")
-		woonplaats.text =tempWoonplaats
-		woonplaatsToon1.inputText =tempWoonplaats
+		woonplaatsEdit.inputText =tempWoonplaats
 		searchstring = ""
-		if (isNxt){getPlaces()}
+		getPlaces2(tempWoonplaats)
 	}
 
 	onCustomButtonClicked: {
 		if (tempWoonplaats === "")tempWoonplaats ="xxxxxxxxxxx"
 		app.woonplaats = tempWoonplaats
-		app.urlToon2 = tempUrl 
+		app.url = tempUrl 
 		app.saveSettings()
 		hide()
 	}
 
-	function saveWoonplaats(plaats,regio,provincie) {
+	function saveWoonplaats(plaats,plaatsURL) {
 		if (plaats) {
 			tempWoonplaats = plaats;
 			if (app.debugOutput) console.log("*********P2000 plaats: " + plaats)
-			if (app.debugOutput) console.log("*********P2000 regio: " + regio)
-			if (app.debugOutput) console.log("*********P2000 provincie: " + provincie)
-			if (isNxt){
-				if (app.debugOutput) console.log("*********P2000 provincie: " + provincie)
-				woonplaats2.text = tempWoonplaats
-				provincie1.text = provincie
-				regio1.text = regio
-				tempUrl = "https://alarmeringen.nl/" + provincie + "/" + regio + "/" + plaats + "/"
+			    nwwoonplaatsText.text = tempWoonplaats
+				tempUrl = "https://alarmeringen.nl/feeds/city/" + plaatsURL + ".rss"
+				if (app.debugOutput) console.log("*********P2000 tempUrl: " + tempUrl)
 				tempUrl = replaceString(tempUrl, " ", "-");
 				urlText.text = tempUrl
-			}
-			if (!isNxt){woonplaatsToon1.inputText =tempWoonplaats}
 		}
 	}
-
-	function updateList(searchPlace){
-        if (app.debugOutput) console.log("*********P2000 searchPlace: " + searchPlace)
-		foundPlaces.splice(0, foundPlaces.length);
-		foundRegio.splice(0, foundRegio.length);
-		foundProvincie.splice(0, foundProvincie.length);
-
+	
+	function updateList(){
+        if (app.debugOutput) console.log("*********P2000 updateListToon1")
         if (placesModel){
 			placesModel.clear()
-			if(searchPlace === ""){
-				for (var i in placenames) {
-					placesModel.append({place: placenames[i]});
-					foundPlaces.push(placenames[i]);
-					foundRegio.push(regionames[i]);
-					foundProvincie.push(provincienames[i]);
-				}
-			}else{
-				for (var i in placenames) {
-					if(placenames[i].toLowerCase().substring(0,searchPlace.length) === searchPlace.toLowerCase()){
-							placesModel.append({place: placenames[i]});
-							foundPlaces.push(placenames[i]);
-							foundRegio.push(regionames[i]);
-							foundProvincie.push(provincienames[i]);
-					}
-				}
+			for (var i in placenames) {
+				placesModel.append({place: placenames[i]});
 			}
 		}
     }
 	
+	Text {
+		id: instelText
+		text:  "Instellingen"
+		font.family: qfont.semiBold.name
+		font.pixelSize: isNxt ? 18:14
+		anchors {
+			top: parent.top
+			left: parent.left
+			leftMargin: 20
+			topMargin:isNxt? 16:12
+		}
+	}
+	
+	Text {
+		id: infoText
+		text:  "kijk op https://alarmeringen.nl/plaatsen.html voor de juiste spelling van de plaatsnaam."
+		font.family: qfont.semiBold.name
+		font.pixelSize: isNxt ? 18:14
+		anchors {
+			left:instelText.left
+			top: instelText.bottom
+			topMargin:isNxt? 16:12
+		}
+	}
+	
+	Text {
+		id: infoText2
+		text:  "Type een plaats of een gedeelte daarvan in het invoerveld hieronder: "
+		font.family: qfont.semiBold.name
+		font.pixelSize: isNxt ? 18:14
+		anchors {
+			top: infoText.bottom
+			left:instelText.left
+			topMargin:isNxt? 10:8
+		}
+	}
+	
+	EditTextLabel4421 { 
+		id: woonplaatsEdit
+		width: (parent.width*0.4) - 40		
+		height: 30
+		inputText:""
+		leftTextAvailableWidth: 100
+		leftText: "Plaats: "
+		labelFontSize: isNxt ? 18:14
+		labelFontFamily: qfont.semiBold.name
+		anchors {
+			left:instelText.left
+			top: infoText2.bottom
+			topMargin:isNxt? 16:12
+		}
+		onClicked: {
+			qkeyboard.open(woonplaatsEdit.leftText, woonplaatsEdit.inputText, getPlaces2)
+		}
+	}
+	
 	Rectangle{
         id: listviewContainer1
-        width: isNxt ? 300 : 240
+        width: isNxt ? 400 : 320
 		height: isNxt? 200:160
         color: "white"
         radius: isNxt ? 5 : 4
         border.color: "black"
-            border.width: isNxt ? 3 : 2
+        border.width: isNxt ? 3 : 2
         anchors {
-            top:		parent.top
+            top:		woonplaatsEdit.bottom
             topMargin: 	isNxt? 20:16
-            left:   	parent.left
-			leftMargin : isNxt? 20:16
+            left:   	instelText.left
         }
 
         Component {
@@ -135,8 +157,6 @@ Screen {
             }
             focus: true
         }
-		
-		visible: isNxt
     }
 	
 	IconButton {
@@ -152,25 +172,9 @@ Screen {
 			if (listview1.currentIndex>0){
 				listview1.currentIndex  = listview1.currentIndex -1
 			}
-		}
-	visible: isNxt		
+		}	
 	}
 	
-	IconButton {
-		id: refreshButton
-		anchors {
-			verticalCenter: listviewContainer1.verticalCenter
-			left:  listviewContainer1.right
-			leftMargin : isNxt? 3 : 2
-		}
-		iconSource: "qrc:/tsc/refresh.png"
-		onClicked: {
-			searchstring = ""
-			getPlaces()
-		}	
-		visible: isNxt
-	}
-
 
 	IconButton {
 		id: downButton
@@ -184,12 +188,12 @@ Screen {
 		onClicked: {
 			listview1.currentIndex  = listview1.currentIndex +1
 		}
-		visible: isNxt
+
 	}
 
 	NewTextLabel {
 		id: selText
-		width: isNxt ? 120 : 96;  
+		width: listviewContainer1.width 
 		height: isNxt ? 40:32
 		buttonActiveColor: "lightgreen"
 		buttonHoverColor: "blue"
@@ -198,235 +202,53 @@ Screen {
 		buttonText:  "Selecteer"
 		anchors {
 			top: listviewContainer1.bottom
-			left: listviewContainer1.left
+			left: instelText.left
 			topMargin: isNxt? 5: 4
 			}
 		onClicked: {
-			saveWoonplaats(foundPlaces[listview1.currentIndex],foundRegio[listview1.currentIndex],foundProvincie[listview1.currentIndex])
+			saveWoonplaats(placenames[listview1.currentIndex],cityURLs[listview1.currentIndex])
 		}
-		visible: isNxt
-	}
-	
-
-	
-
-	Rectangle {
-		id:keyb
-		height: isNxt? 200:160
-		width: isNxt? parent.width -50:parent.width -40
-		anchors {
-			bottom: parent.bottom
-			bottomMargin: isNxt ? 20:16
-			horizontalCenter: parent.horizontalCenter
-		}
-		Row {
-			id: row1
-			spacing: 2
-			anchors {
-				top: parent.top
-				topMargin: isNxt ? 10:8
-				horizontalCenter: parent.horizontalCenter
-			}
-
-			Rectangle {height: bh ;width:bw ; Text {text:"Q";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("Q")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"W";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("W")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"E";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("E")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"R";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("R")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"T";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("T")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"Y";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("Y")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"U";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("U")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"I";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("I")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"O";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("O")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"P";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("P")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"WIS";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("BACK")}}}
-		}
-
-
-		Row {
-			id: row2
-			spacing: 2
-			anchors {
-				top: row1.bottom
-				topMargin: isNxt ? 10:8
-				horizontalCenter: parent.horizontalCenter
-			}
-			Rectangle {height: bh ;width:bw ; Text {text:"A";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("A")}}}
-			Rectangle { height: bh ;width:bw ; Text {text:"S";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("S")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"D";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("D")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"F";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("F")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"G";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("G")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"H";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("H")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"J";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("J")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"K";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("K")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"L";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("L")}}}
-		}
-
-
-		Row {
-			id: row3
-			spacing: 2
-			anchors {
-				top: row2.bottom
-				topMargin: isNxt ? 10:8
-				horizontalCenter: parent.horizontalCenter
-			}
-			Rectangle {height: bh ;width:bw ; Text {text:"Z";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("Z")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"X";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("X")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"C";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("C")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"V";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("V")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"B";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("B")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"N";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("N")}}}
-			Rectangle {height: bh ;width:bw ; Text {text:"M";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("M")}}}
-		}
-
-		Row {
-			id: row4
-			spacing: 2
-			anchors {
-				top: row3.bottom
-				topMargin: isNxt ? 10:8
-				horizontalCenter: parent.horizontalCenter
-			}
-			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"SPATIE";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString(" ")}}}
-			Rectangle {height: bh ;width:isNxt? 200:160 ; Text {text:"STREEPJE";font.family: qfont.semiBold.name} MouseArea {anchors.fill: parent; onClicked: { newString("-")}}}
-		}
-		visible: isNxt
-	}
-	
-	Text {
-        id: placesText
-        text: searchstring
-        font {
-            family: qfont.semiBold.name
-            pixelSize: isNxt ? 18:14
-        }
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.verticalCenter
-        }
-		visible: isNxt
-    }
-		
-	Text {
-		id: mytext1
-		text:  "Huidige plaats: "
-		font.family: qfont.semiBold.name
-		font.pixelSize: isNxt ? 18:14
-		anchors {
-			top: parent.top
-			horizontalCenter: parent.horizontalCenter
-			topMargin:20
-		}
-		visible: isNxt
 	}
 
 	Text {
-		id: woonplaats
-		text:  ""
-		font.family: qfont.semiBold.name
-		font.pixelSize: isNxt ? 18:14
-		anchors {
-			top: mytext1.top
-			left: mytext1.right
-			leftMargin:isNxt? 16:12
-		}
-		visible: isNxt
-	}
-
-	Text {
-		id: mytext2
+		id: nwPlaatsText
 		text:  "Nieuwe plaats: "
 		font.family: qfont.semiBold.name
 		font.pixelSize: isNxt ? 18:14
 		anchors {
-			top: mytext1.bottom
-			left: mytext1.left
+			top: selText.bottom
+			left: instelText.left
 			topMargin:isNxt? 16:12
 		}
-		visible: isNxt
 	}
 
+
 	Text {
-		id: woonplaats2
+		id: nwwoonplaatsText
 		text:  ""
 		font.family: qfont.semiBold.name
 		font.pixelSize: isNxt ? 18:14
 		anchors {
-			top: mytext2.top
-			left: woonplaats.left
+			top: nwPlaatsText.top
+			left: nwPlaatsText.right
+			leftMargin: isNxt? 30:24
 		}
-		visible: isNxt
-	}
-	
-	Text {
-		id: mytext3
-		text:  "Provicie: "
-		font.family: qfont.semiBold.name
-		font.pixelSize: isNxt ? 18:14
-		anchors {
-			top: mytext2.bottom
-			left: mytext1.left
-			topMargin:isNxt? 16:12
-		}
-		visible: isNxt
-	}
-
-	Text {
-		id: provincie1
-		text:  ""
-		font.family: qfont.semiBold.name
-		font.pixelSize: isNxt ? 18:14
-		anchors {
-			top: mytext3.top
-			left: woonplaats.left
-		}
-		visible: isNxt
 	}	
-
-	Text {
-		id: mytext4
-		text:  "Regio: "
-		font.family: qfont.semiBold.name
-		font.pixelSize: isNxt ? 18:14
-		anchors {
-			top: mytext3.bottom
-			left: mytext1.left
-			topMargin:isNxt? 16:12
-		}
-		visible: isNxt
-	}
-
-	Text {
-		id: regio1
-		text:  ""
-		font.family: qfont.semiBold.name
-		font.pixelSize: isNxt ? 18:14
-		anchors {
-			top: mytext4.top
-			left: woonplaats.left
-		}
-		visible: isNxt
-	}		
 	
+
 	Text {
 		id: urlText
 		text:  ""
 		font.family: qfont.semiBold.name
 		font.pixelSize: isNxt ? 18:14
 		wrapMode: Text.Wrap
-		width: 500
+		width: 800
 		anchors {
-			top: mytext4.bottom
-			left: mytext1.left
-			topMargin:isNxt? 16:12
+			top:  nwPlaatsText.bottom
+			left: instelText.left
+			topMargin:isNxt? 10:8
 		}
-		visible: isNxt
 	}
-	
-
-
-
-
 
 
     function  replaceString(inputstring, pattern, nw) {
@@ -447,57 +269,32 @@ Screen {
         return inputstring;
     }
 	
-	function  newString(newChar) {
-		if (newChar === "BACK"){
-			searchstring = searchstring.substring(0,searchstring.length-1)
-		}else{
-			searchstring = searchstring + newChar
-		}
-        updateList(searchstring)
-    }
 	
-    function getPlaces(){
+    function getPlaces2(plaats){
+		
 		placenames.splice(0, placenames.length);
-		provincienames.splice(0, placenames.length);
-		regionames.splice(0, placenames.length);
+		cityURLs.splice(0, cityURLs.length);
+	
         if (app.debugOutput) console.log("*********P2000: Start getPlaces")
         var http = new XMLHttpRequest()
-		http.open("GET", "https://alarmeringen.nl/plaatsen.html", true);
+		http.open("GET", "https://alarmeringen.nl/city_autocomplete/?q=" + plaats, true);
+		if (app.debugOutput) console.log("*********P2000: URL: " + "https://alarmeringen.nl/city_autocomplete/?q=" + plaats)
 		http.onreadystatechange = function() { // Call a function when the state changes.
+			woonplaatsEdit.inputText =plaats
 			if (http.readyState === 4) {
 				if (http.status === 200) {
-					var table = http.responseText.substring(http.responseText.indexOf("<table>") + "<table>".length ,http.responseText.indexOf("</table>"));
-					var items = table.split("<tr>")
-					for(var x = 0;x < items.length;x++){
-						if (items[x] !== undefined){
-							var row = items[x].split("<td>")
-							if (row[1] !== undefined){
-								var begin = row[1].indexOf("'>") + "'>".length
-								var end = row[1].indexOf("<",begin)
-								var tempName = row[1].substring(begin, end).trim();
-								tempName = replaceString(tempName, "&#39;", "");
-								if (app.debugOutput) console.log("*********P2000 tempName: " + tempName);
-								placenames.push(tempName);
-							}
-							
-							if (row[2] !== undefined){
-								var begin = row[2].indexOf("'>") + "'>".length
-								var end = row[2].indexOf("<",begin)
-								var tempRegio = row[2].substring(begin, end).trim();
-								if (app.debugOutput) console.log("*********P2000 tempRegio: " + tempRegio);
-								regionames.push(tempRegio);
-							}
-							
-							if (row[3] !== undefined){
-								var begin = row[3].indexOf("'>") + "'>".length
-								var end = row[3].indexOf("<",begin)
-								var tempProvincie = row[3].substring(begin, end).trim();
-								if (app.debugOutput) console.log("*********P2000 tempProvincie: " + tempProvincie);
-								provincienames.push(tempProvincie);
-							}
-						}
+					if (app.debugOutput) console.log("*********P2000: responseText: " +http.responseText)
+					var JsonString = http.responseText
+                    var JsonObject= JSON.parse(JsonString)
+					for(var x = 0;x < JsonObject.length;x++){
+						placenames.push(JsonObject[x].value)
+						if (app.debugOutput) console.log("*********P2000 pushing to placenames: " + JsonObject[x].value)
+						var einde = JsonObject[x].url.length -2
+						var begin = JsonObject[x].url.lastIndexOf("/", einde) + 1
+						cityURLs.push(JsonObject[x].url.substring(begin, (JsonObject[x].url.length -1)))
+						if (app.debugOutput) console.log("*********P2000 pushing to cityURLs: " + JsonObject[x].url.substring(begin, JsonObject[x].url.length -1))
 					}
-					updateList("")
+					updateList()
 				} else {
 					if (app.debugOutput) console.log("*********P2000 http.status: " + http.status)
 				}
@@ -505,53 +302,6 @@ Screen {
 		}
 		http.send();
     }
-	
-	
-	Text {
-		id: mytextToon1
-		text:  "Instellingen"
-		font.family: qfont.semiBold.name
-		font.pixelSize: isNxt ? 18:14
-		anchors {
-			top: parent.top
-			left: parent.left
-			leftMargin: 20
-			topMargin:20
-		}
-		visible: !isNxt
-	}
-	
-	Text {
-		id: mytextToon2
-		text:  "kijk op https://alarmeringen.nl/plaatsen.html voor de juiste spelling van de plaatsnaam."
-		font.family: qfont.semiBold.name
-		font.pixelSize: isNxt ? 18:14
-		anchors {
-			left:mytextToon1.left
-			top: mytextToon1.bottom
-			topMargin: 6
-		}
-		visible: !isNxt
-	}
-	
-	EditTextLabel4421 { 
-		id: woonplaatsToon1
-		width: (parent.width*0.4) - 40		
-		height: 30		
-		leftTextAvailableWidth: 100
-		leftText: "Plaats: "
-		labelFontSize: isNxt ? 18:14
-		labelFontFamily: qfont.semiBold.name
-		anchors {
-			left:mytextToon1.left
-			top: mytextToon2.bottom
-			topMargin: 6
-		}
-		onClicked: {
-			qkeyboard.open( woonplaatsToon1.leftText,  woonplaatsToon1.inputText, saveWoonplaats)
-		}
-		visible: !isNxt
-	}
 
 }
 
