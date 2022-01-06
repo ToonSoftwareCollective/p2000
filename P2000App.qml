@@ -23,16 +23,32 @@ App {
 	property string 	woonplaats :  "xxxxxxxxxxx"
 	property var 		title : [];
 	property var 		description : [];
+	property string 	lastDescription :  	""
 	property var 		pubDate : [];
 	property var 		pubDateFull : [];
 	property var 		txtcolors : [];	
 	property int		scrapetime: 60000; //every minute after first fetch
 	property int		scrapetime2: 20000;  //first fetch after start
 	property bool 		firststime: true;
+	property bool 		enableNotifications: true;
+	
+	property bool 		isInNotificationMode: false
+	property bool 		oldanimationRunning: 	false
+	property bool 		oldisVisibleinDimState: true
+	property int 		oldanimationInterval : 	1000
+	
+	property string 	oldqmlAnimationURL :  	""
+	property string 	oldqmlAnimationText : 	""
+	property string 	oldstaticImageT1 : 		""
+	property string 	oldstaticImageT2 : 		""
+	property string 	oldstaticImageT1dim : 	""
+	property string 	oldstaticImageT2dim : 	""
+			
 	
 	property variant p2000SettingsJson : {
 		'woonplaats': "",
-		'url': ""
+		'url': "",
+		'enableNotifications': ""
 	}
 	
 	FileIO {
@@ -55,12 +71,29 @@ App {
 			url = p2000SettingsJson['url']
 		} catch(e) {
 		}
+		try {
+			p2000SettingsJson = JSON.parse(p2000SettingsFile.read());
+			if (p2000SettingsJson['enableNotifications'] == "Yes") {
+				enableNotifications = true
+			} else {
+				enableNotifications = false
+			}
+		} catch(e) {
+		}
 		scrapetime2 = 1000;
 	}
 	
 	function saveSettings() {
+		var tmpNotifications
+		if (enableNotifications == true) {
+			tmpNotifications = "Yes";
+		} else {
+			tmpNotifications = "No";
+		}
+
  		var p2000SettingsJson = {
 			"url" : url,
+			"enableNotifications" : tmpNotifications,
 			"woonplaats" : woonplaats
 		}
   		p2000SettingsFile.write(JSON.stringify(p2000SettingsJson))
@@ -69,12 +102,13 @@ App {
 		pubDate.splice(0, pubDate.length);
 		pubDateFull.splice(0, pubDateFull.length);
 		txtcolors.splice(0, txtcolors.length);
-		firststime = true;
-		p2000Updated();
+		firststime = true
+		console.log("P2000 saved")
+		p2000Updated()
+		console.log("P2000 getting data")
 		getP2000Data()
+		
 	}
-
-
 
 	function  replaceString(inputstring, pattern, nw) {
 	   var curidx = 0 ;
@@ -113,8 +147,8 @@ App {
 						var items = http.responseText.toString().split("<item>")
 						var searchString = woonplaats.toLowerCase();
 						for(var x = 1;x < 15;x++){
-							var tempTitle = items[x].substring(items[x].indexOf("<title>") + "<title>".length ,items[x].indexOf("</title>"));
 							var tempdescription =items[x].substring(items[x].indexOf("<description>") + "<description>".length ,items[x].indexOf("</description>"));
+							var tempTitle =  tempdescription;
 							var tempPubDate = items[x].substring(items[x].indexOf("<pubDate>") + "<pubDate>".length ,items[x].indexOf("</pubDate>"))
 							
 							var lineColor = "black";
@@ -133,6 +167,7 @@ App {
 							
 							txtcolors.push(lineColor);
 							title.push(tempTitle);
+							
 							description.push(tempdescription);
 							
 							const d = new Date(tempPubDate);
@@ -154,8 +189,14 @@ App {
 							}
 							
 						}
+						if (lastDescription!==description[0]){ // there is a change
+							if(!isInNotificationMode & !firststime & enableNotifications){
+								createScreenNotification(pubDate[0], title[0])
+							}
+						}
+						firststime = false;
+						lastDescription=description[0]
 						p2000Updated();
-						
 					}else {
 						if (debugOutput) console.log("*********P2000: " + http.status)
 					}
@@ -167,16 +208,108 @@ App {
 	
 	
     Timer {
-            id: scrapeTimer   //delay to hide the new goal screen
-            interval: scrapetime2
-            repeat: true
-            running: true
-            triggeredOnStart: false
-            onTriggered: {
-                getP2000Data()
-            }
-   }		
+		id: scrapeTimer   //delay to hide the new goal screen
+		interval: scrapetime2
+		repeat: true
+		running: true
+		triggeredOnStart: false
+		onTriggered: {
+			getP2000Data()
+		}
+	}		
+
+	function createScreenNotification(eventTime, eventDescription){
+		isInNotificationMode = true
+		oldanimationRunning = animationscreen.animationRunning
+		oldisVisibleinDimState = animationscreen.isVisibleinDimState
+		oldanimationInterval = animationscreen.animationInterval
+		oldqmlAnimationURL = animationscreen.qmlAnimationURL
+		oldqmlAnimationText = animationscreen.qmlAnimationText
+		oldstaticImageT1 = animationscreen.staticImageT1
+		oldstaticImageT2 = animationscreen.staticImageT2
+		oldstaticImageT1dim = animationscreen.staticImageT1dim
+		oldstaticImageT2dim =animationscreen.staticImageT2dim
+		
+		animationscreen.animationRunning= false
+			
+		if (debugOutput) console.log("*********P2000 START To Write Notification: " + eventTime +  "-" + eventDescription)
+		var setJson = {
+			"eventTime" : eventTime,
+			"eventDescription" : eventDescription
+		}
+		var doc = new XMLHttpRequest()
+		doc.open("PUT", "file:///HCBv2/qml/apps/p2000/event.json")
+		doc.send(JSON.stringify(setJson))
+		smallDelayTimer.running = true	
+	}
 
 
+	Timer {
+		id: smallDelayTimer   //delay to show the goal animation screen
+		interval: 100
+		repeat: false
+		running: false
+		triggeredOnStart: false
+		onTriggered: {
+			animationscreen.qmlAnimationURL= "file:///HCBv2/qml/apps/p2000/P2000Animation.qml"
+			animationscreen.animationInterval= 100000
+			animationscreen.isVisibleinDimState= true
+			if (oldanimationRunning){
+				animationscreen.staticImageT1 = oldstaticImageT1
+				animationscreen.staticImageT2 = oldstaticImageT2
+				animationscreen.staticImageT1dim = oldstaticImageT1dim
+				animationscreen.staticImageT2dim = oldstaticImageT2
+				
+			}else{
+				animationscreen.staticImageT1 = ""
+				animationscreen.staticImageT2 = ""
+				animationscreen.staticImageT1dim = ""
+				animationscreen.staticImageT2dim = ""
+			}
+			animationscreen.animationRunning= true;
+			notificationTimer.running = true
+			smallDelayTimer.running = false
+		}
+	}
+
+	Timer {
+		id: notificationTimer   //delay to hide the notification
+		interval: 10000
+		repeat: false
+		running: false
+		triggeredOnStart: false
+		onTriggered: {
+			animationscreen.animationRunning= false
+			animationscreen.qmlAnimationURL = ""
+			smallDelayTimer2.running = true			
+			notificationTimer.running = false
+		}
+	}
+	
+	Timer {
+		id: smallDelayTimer2  //delay to return to the old animation
+		interval: 3000
+		repeat: false
+		running: false
+		triggeredOnStart: false
+		onTriggered: {
+			if (oldanimationRunning){
+				animationscreen.isVisibleinDimState = oldisVisibleinDimState
+				animationscreen.animationInterval = oldanimationInterval
+				animationscreen.qmlAnimationURL = oldqmlAnimationURL
+				animationscreen.qmlAnimationText = oldqmlAnimationText
+				animationscreen.staticImageT1 = oldstaticImageT1
+				animationscreen.staticImageT2 = oldstaticImageT2
+				animationscreen.staticImageT1dim = oldstaticImageT1dim
+				animationscreen.staticImageT2dim = oldstaticImageT2dim
+				animationscreen.animationRunning = true
+			}else{
+				animationscreen.animationRunning= false
+				animationscreen.isVisibleinDimState= false
+			}
+			isInNotificationMode = false
+			smallDelayTimer2.running = false
+		}
+	}
 
 }
