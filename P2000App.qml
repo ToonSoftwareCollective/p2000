@@ -73,10 +73,10 @@ App {
 		}
 		try {
 			p2000SettingsJson = JSON.parse(p2000SettingsFile.read());
-			if (p2000SettingsJson['enableNotifications'] == "Yes") {
-				enableNotifications = true
-			} else {
+			if (p2000SettingsJson['enableNotifications'] == "No") {
 				enableNotifications = false
+			} else {
+				enableNotifications = true
 			}
 		} catch(e) {
 		}
