@@ -12,20 +12,23 @@ Screen {
 
     property int bw : isNxt? 70:56
     property int bh : isNxt? 35:28
-	property string tempUrl : ""
+	property string tempUrl : app.url
 	
+	property bool tempNotifications : app.enableNotifications
 
 	onShown: {
 		addCustomTopRightButton("Opslaan")
 		woonplaatsEdit.inputText =tempWoonplaats
 		searchstring = ""
 		getPlaces2(tempWoonplaats)
+		notificationModeToggle.isSwitchedOn = tempNotifications;
 	}
 
 	onCustomButtonClicked: {
-		if (tempWoonplaats === "")tempWoonplaats ="xxxxxxxxxxx"
+		if (tempWoonplaats === "")tempWoonplaats ="xxxxxxxxxxx"	
 		app.woonplaats = tempWoonplaats
 		app.url = tempUrl 
+		app.enableNotifications = tempNotifications
 		app.saveSettings()
 		hide()
 	}
@@ -107,6 +110,39 @@ Screen {
 			qkeyboard.open(woonplaatsEdit.leftText, woonplaatsEdit.inputText, getPlaces2)
 		}
 	}
+	
+	Text {
+		id: notificationMode
+		text: "Schermnotificatie bij nieuwe melding: "
+		font.pixelSize:  isNxt ? 18:14
+		font.family: qfont.semiBold.name
+
+		anchors {
+			left: upButton.right
+			top: woonplaatsEdit.top
+			leftMargin: isNxt ? 18:14
+		}
+	}
+
+	OnOffToggle {
+		id: notificationModeToggle
+		height:  30
+		
+		anchors {
+			left: notificationMode.right
+			top: notificationMode.top
+			leftMargin: isNxt ? 18:14
+		}
+		leftIsSwitchedOn: false
+		onSelectedChangedByUser: {
+			if (isSwitchedOn) {
+				tempNotifications = true;
+			} else {
+				tempNotifications = false;
+			}
+		}
+	}
+
 	
 	Rectangle{
         id: listviewContainer1
